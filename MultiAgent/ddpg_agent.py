@@ -41,24 +41,33 @@ class Agent():
         self.state_size = args['state_size']
         self.action_size = args['action_size']
         self.seed = random.seed(args['random_seed'])
+        self.batch_size = args['batch_size']
+        self.batches_per_update = args['batches_per_update']
+        self.buffer_size=args['buffer_size']
+        self.lr_actor = args['lr_actor']
+        self.lr_critic = args['lr_critic']
+        self.weight_decay = args['weight_decay']
 
-        self.gamma = GAMMA
+        self.gamma = args['gamma']
+        self.tau = args['tau']
+
+
 
         # Actor Network (w/ Target Network)
         self.actor_local = Actor(args).to(device)
         self.actor_target = Actor(args).to(device)
-        self.actor_optimizer = optim.Adam(self.actor_local.parameters(), lr=LR_ACTOR)
+        self.actor_optimizer = optim.Adam(self.actor_local.parameters(), lr=self.lr_actor)
 
         # Critic Network (w/ Target Network)
         self.critic_local = Critic(args).to(device)
         self.critic_target = Critic(args).to(device)
-        self.critic_optimizer = optim.Adam(self.critic_local.parameters(), lr=LR_CRITIC, weight_decay=WEIGHT_DECAY)
+        self.critic_optimizer = optim.Adam(self.critic_local.parameters(), lr=self.lr_critic, weight_decay=self.weight_decay)
 
         # Noise process
         self.noise = OUNoise(self.action_size, self.seed)
 
         # Replay memory
-        self.memory = ReplayBuffer(self.action_size, BUFFER_SIZE, BATCH_SIZE, self.seed)
+        self.memory = ReplayBuffer(self.action_size, self.buffer_size, self.batch_size, self.seed)
 
         self.update_type = args['update_type']
 
@@ -73,8 +82,9 @@ class Agent():
             self.memory.add(state, action, reward, next_state, done)
 
         # Learn, if enough samples are available in memory
-        if len(self.memory) > BATCH_SIZE and self.counter % 20 == 0:
-                self.learn()
+        if len(self.memory) > self.batch_size and self.counter % self.batches_per_update == 0:
+            #pdb.set_trace()
+            self.learn()
         self.counter += 1
 
     def act(self, states, add_noise=True):
@@ -122,7 +132,7 @@ class Agent():
             gamma (float): discount factor
         """
         #pdb.set_trace()
-        for i in range(20):
+        for i in range(self.batches_per_update):
 
             states, actions, rewards, next_states, dones = self.memory.sample()
 
@@ -152,8 +162,8 @@ class Agent():
 
         # ----------------------- update target networks ----------------------- #
         if self.update_type == 'soft':
-            self.soft_update(self.critic_local, self.critic_target, TAU)
-            self.soft_update(self.actor_local, self.actor_target, TAU)
+            self.soft_update(self.critic_local, self.critic_target, self.tau)
+            self.soft_update(self.actor_local, self.actor_target, self.tau)
         else:
             self.hard_update(self.critic_local, self.critic_target)
             self.hard_update(self.actor_local, self.actor_target)
