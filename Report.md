@@ -13,18 +13,18 @@ Many modifications were made as it was found that this method did not naturally 
 
 ### Hyperparameters
 Network parameters apply to both actor and critic networks:
-*fc1_units = 400
-*fc2_units = 300
+* fc1_units = 400
+* fc2_units = 300
 
 Agent parameters:
-*tau = 1e-3
-*gamma = 0.9
-*buffer_size = int(2e6)
-*batch_size = 1024
-*batches_per_update = 10
-*lr_actor = 1e-3
-*lr_critic = 1e-3
-*weight_decay = 0
+* tau = 1e-3
+* gamma = 0.9
+* buffer_size = int(2e6)
+* batch_size = 1024
+* batches_per_update = 10
+* lr_actor = 1e-3
+* lr_critic = 1e-3
+* weight_decay = 0
 
 
 ### Negative reward
