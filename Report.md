@@ -38,7 +38,7 @@ The learning step has been updated to only run once every `batches_per_update` a
 
 
 ## Final learning Scores
-After all these implementations, the agent managed to achieve an average score across 30 consequtive episodes over all 20 arms after 231 episodes. 
+After all these implementations, the agent managed to achieve an average score across 30 consequtive episodes over all 20 arms after 132 episodes. The plot below shows the average of all 20 arms over the last 100 episodes, hence the average from 132 to 231 inclusive are greater than 30.
 
 ![alt text](https://github.com/SamJCKnox/P2_Reacher_Submission/blob/master/ScoresDDPG.png)
 
